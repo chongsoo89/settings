@@ -1,22 +1,31 @@
-:colorscheme torte
-:set number
-:set laststatus=2
-:set statusline=\ %<%l:%v\ [%P]%=%a\ %h%m%r\ %F\
-:set nowrapscan
+set encoding=utf-8
+colors torte
+syn on
+set number
+set ruler
+set cursorline
+set laststatus=2
+"set statusline=\ %<%l:%v\ [%P]%=%a\ %h%m%r\ %F\
+set statusline=%<%F\ \ %h%m%r%y%{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",Bomb\":\",NoBomb\").\"]\ \"}%k
+set statusline+=%=
+set statusline+=\ %-14.(Line:%l\/%L,Col:%c%V%)\ %P
 
-:set autochdir
-:set autoread
+set nobackup
 
-:set ignorecase
-:set smartcase
-:set incsearch
-:set hlsearch
+set autochdir
+set autoread
 
-:set tabstop=4
-:set expandtab
-:set shiftwidth=4
-:set autoindent
-:set cindent
+set ignorecase
+set smartcase
+set incsearch
+set hlsearch
+set nowrapscan
 
-:let &makeprg = 'if [ -f Makefile ]; then make; else make -C ..; fi'
-:map <f5> :make<CR>
+set tabstop=4
+set shiftwidth=4
+set autoindent
+set cindent
+set expandtab
+
+let &makeprg = 'if [ -f Makefile ]; then make; else make -C ..; fi'
+map <f5> :make<CR>
