@@ -7,7 +7,7 @@ set nocompatible
 " turn syntax highlighting on
 set t_Co=256
 syn on
-colors torte
+colors xoria256 
 
 " turn line numbers / ruler / cursorline on
 set number
