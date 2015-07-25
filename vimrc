@@ -7,7 +7,7 @@ set nocompatible
 " turn syntax highlighting on
 set t_Co=256
 syn on
-colors xoria256 
+colors hybrid
 
 " turn line numbers / ruler / cursorline on
 set number
@@ -46,8 +46,8 @@ set nowrapscan
 set showmatch
 
 " configure tabwidth and insert spaces instead of tabs
-set tabstop=4
-set shiftwidth=4
+set tabstop=2
+set shiftwidth=2
 set expandtab
 
 " use indentation of previous line
@@ -59,5 +59,6 @@ set cindent
 
 " Enhanced keyboard mappings
 let &makeprg = 'if [ -f Makefile ]; then make $*; else make $* -C ..; fi'
-map <f5> :make<CR>
+map <f5> :make mode=debug def=test<CR>
+map <S-f5> :make def=test<CR>
 map <f6> :make clean<CR>
