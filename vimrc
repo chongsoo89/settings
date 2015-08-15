@@ -7,7 +7,7 @@ set nocompatible
 " turn syntax highlighting on
 set t_Co=256
 syn on
-colors hybrid
+colors Tomorrow-Night
 
 " turn line numbers / ruler / cursorline on
 set number
