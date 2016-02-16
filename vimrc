@@ -60,6 +60,16 @@ set cindent
 
 " Enhanced keyboard mappings
 let &makeprg = 'if [ -f Makefile ]; then make $*; else make $* -C ..; fi'
-map <f5> :make mode=debug def=test<CR>
-map <S-f5> :make def=test<CR>
+map <f5> :make mode=debug<CR>
+map <S-f5> :make<CR>
 map <f6> :make clean<CR>
+
+set grepprg=grep\ -nH\ $*
+" filetype plugin on
+set nofoldenable
+let g:Tex_Menus=0
+let g:Tex_flavor='latex'
+let g:Tex_DefaultTargetFormat='pdf'
+let g:Tex_MultipleCompileFormat='dvi,pdf'
+
+let g:DoxygenToolkit_commentType="C++"
