@@ -54,9 +54,8 @@ set expandtab
 " use indentation of previous line
 set autoindent
 
-" use intelligent indentation for C
-"set autoindent
-set cindent
+" Different settings for different file types.
+filetype plugin indent on
 
 " Enhanced keyboard mappings
 " let &makeprg = 'if [ -f Makefile ]; then make $*; else make $* -C ..; fi'
