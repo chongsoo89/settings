@@ -1,3 +1,24 @@
+" ================ Vundle ==================
+set nocompatible " be iMproved, required
+filetype off " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" Let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" Plugins
+Plugin 'scrooloose/nerdtree'
+Plugin 'tpope/vim-fugitive'
+Plugin 'bling/vim-airline'
+
+" All of yours Plugins must be added before the folloing line
+call vundle#end() " required
+filetype plugin indent on " required
+" ==========================================
+
 " set UTF-8 encoding
 set encoding=utf-8
 
@@ -21,11 +42,6 @@ set laststatus=2
 " turn wildmenu on
 set wildmenu
 set wildmode=list:longest,full
-
-" intelligent comments
-set statusline=%<%F\ \ %h%m%r%y%{\"[\".(&fenc==\"\"?&enc:&fenc).((exists(\"+bomb\")\ &&\ &bomb)?\",Bomb\":\",NoBomb\").\"]\ \"}%k
-set statusline+=%=
-set statusline+=\ %-14.(Line:%l\/%L,Col:%c%V%)\ %P
 
 " turn backup file generation off
 set nobackup
