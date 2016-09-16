@@ -79,3 +79,4 @@ let &makeprg = 'FILEMK=Makefile; PATHMK=./; DEPTH=1; while [ $DEPTH -lt 5 ]; do 
 map <f5> :make mode=debug<CR>
 map <S-f5> :make<CR>
 map <f6> :make clean<CR>
+map <S-f6> :make distclean<CR>
