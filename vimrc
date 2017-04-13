@@ -56,7 +56,7 @@ set autoread
 set ignorecase
 set smartcase
 set incsearch
-"set hlsearch
+set nohlsearch
 set nowrapscan
 
 " highlight matching braces
