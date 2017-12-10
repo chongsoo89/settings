@@ -73,10 +73,24 @@ set autoindent
 " Different settings for different file types.
 filetype plugin indent on
 
+" Disable folding
+set nofoldenable
+
 " Enhanced keyboard mappings
 " let &makeprg = 'if [ -f Makefile ]; then make $*; else make $* -C ..; fi'
 let &makeprg = 'FILEMK=Makefile; PATHMK=./; DEPTH=1; while [ $DEPTH -lt 5 ]; do if [ -f $PATHMK$FILEMK ]; then make $* -C $PATHMK; break; else PATHMK=../$PATHMK; let DEPTH+=1; fi done'
-map <f5> :make mode=debug<CR>
-map <S-f5> :make<CR>
+map <f5> :make mode=debug compiler=intel<CR>
+map <S-f5> :make compiler=intel<CR>
 map <f6> :make clean<CR>
 map <S-f6> :make distclean<CR>
+
+" LatexSuite
+let g:Tex_DefaultTargetFormat='pdf'
+let g:Tex_MultipleCompileFormats='pdf'
+let g:Tex_CompileRule_pdf = 'mkdir -p build && pdflatex -output-directory=build -interaction=nonstopmode $* && cp *.bib build && cd build && bibtex %:r && cd .. && pdflatex -output-directory=build -interaction=nonstopmode $* && pdflatex -output-directory=build -interaction=nonstopmode $* && mv build/$*.pdf .'
+let g:Tex_ViewRule_pdf='evince'
+if has('gui_running')
+  set grepprg=grep\ -nH\ $*
+  let g:tex_flavor='latex'
+  set gfn=Inconsolata\ Medium\ 15
+endif
