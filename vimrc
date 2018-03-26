@@ -11,6 +11,7 @@ Plugin 'VundleVim/Vundle.vim'
 
 " Plugins
 Plugin 'scrooloose/nerdtree'
+Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
 Plugin 'bling/vim-airline'
 
@@ -18,6 +19,13 @@ Plugin 'bling/vim-airline'
 call vundle#end() " required
 filetype plugin indent on " required
 " ==========================================
+
+" settings for Vundle
+map <Leader>nt <ESC>:NERDTree<CR>
+set updatetime=100
+let g:airline_powerline_fonts=1
+let g:airline#extensions#tabline#enabled=1
+let g:airline#extensions#tabline#formatter='unique_tail'
 
 " set UTF-8 encoding
 set encoding=utf-8
@@ -89,8 +97,8 @@ let g:Tex_DefaultTargetFormat='pdf'
 let g:Tex_MultipleCompileFormats='pdf'
 let g:Tex_CompileRule_pdf = 'mkdir -p build && pdflatex -output-directory=build -interaction=nonstopmode $* && cp *.bib build && cd build && bibtex %:r && cd .. && pdflatex -output-directory=build -interaction=nonstopmode $* && pdflatex -output-directory=build -interaction=nonstopmode $* && mv build/$*.pdf .'
 let g:Tex_ViewRule_pdf='evince'
-if has('gui_running')
-  set grepprg=grep\ -nH\ $*
-  let g:tex_flavor='latex'
-  set gfn=Inconsolata\ Medium\ 15
-endif
+"if has('gui_running')
+"  set grepprg=grep\ -nH\ $*
+"  let g:tex_flavor='latex'
+"  set gfn=Inconsolata\ Medium\ 15
+"endif
