@@ -21,8 +21,13 @@ filetype plugin indent on " required
 " ==========================================
 
 " settings for Vundle
-map <Leader>nt <ESC>:NERDTree<CR>
-set updatetime=100
+nmap <Leader>nt <ESC>:NERDTree<CR>
+set updatetime=100 " for gitgutter update
+if exists('&signcolumn')
+  set signcolumn=yes
+else
+  let g:gitgutter_sign_column_always=1
+endif
 let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled=1
 let g:airline#extensions#tabline#formatter='unique_tail'
@@ -87,10 +92,12 @@ set nofoldenable
 " Enhanced keyboard mappings
 " let &makeprg = 'if [ -f Makefile ]; then make $*; else make $* -C ..; fi'
 let &makeprg = 'FILEMK=Makefile; PATHMK=./; DEPTH=1; while [ $DEPTH -lt 5 ]; do if [ -f $PATHMK$FILEMK ]; then make $* -C $PATHMK; break; else PATHMK=../$PATHMK; let DEPTH+=1; fi done'
-map <f5> :make mode=debug compiler=intel<CR>
-map <S-f5> :make compiler=intel<CR>
-map <f6> :make clean<CR>
-map <S-f6> :make distclean<CR>
+nmap <f5> :make mode=debug compiler=intel<CR>
+nmap <S-f5> :make compiler=intel<CR>
+nmap <f6> :make clean<CR>
+nmap <S-f6> :make distclean<CR>
+nnoremap <Tab> :bnext<CR>
+nnoremap <S-Tab> :bprevious<CR>
 
 " LatexSuite
 let g:Tex_DefaultTargetFormat='pdf'
