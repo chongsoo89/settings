@@ -32,6 +32,7 @@ let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled=1
 let g:airline#extensions#tabline#buffer_nr_show=1
 let g:airline#extensions#tabline#formatter='unique_tail'
+autocmd BufDelete * call airline#extensions#tabline#buflist#invalidate()
 
 " set UTF-8 encoding
 set encoding=utf-8
@@ -90,15 +91,18 @@ filetype plugin indent on
 " Disable folding
 set nofoldenable
 
-" Enhanced keyboard mappings
+" Mapping for Makefile
 " let &makeprg = 'if [ -f Makefile ]; then make $*; else make $* -C ..; fi'
 let &makeprg = 'FILEMK=Makefile; PATHMK=./; DEPTH=1; while [ $DEPTH -lt 5 ]; do if [ -f $PATHMK$FILEMK ]; then make $* -C $PATHMK; break; else PATHMK=../$PATHMK; let DEPTH+=1; fi done'
 nmap <f5> :make mode=debug compiler=intel<CR>
 nmap <S-f5> :make compiler=intel<CR>
 nmap <f6> :make clean<CR>
 nmap <S-f6> :make distclean<CR>
+
+" Mapping for buffers
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
+nnoremap <C-X> :bdelete<CR>
 
 " LatexSuite
 let g:Tex_DefaultTargetFormat='pdf'
