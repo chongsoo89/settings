@@ -6,7 +6,9 @@
 # fi
 
 # Alias settings
+alias ll='ls -l'
 alias rm='rm -i'
+alias rcp='rsync -avP'
 alias tart='tar tvvzf'
 alias tarc='tar cvvzf'
 alias tarx='tar xvvzf'
