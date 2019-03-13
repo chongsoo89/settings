@@ -14,6 +14,7 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
 Plugin 'bling/vim-airline'
+Plugin 'sonph/onehalf', {'rtp': 'vim/'}
 
 " All of yours Plugins must be added before the folloing line
 call vundle#end() " required
@@ -42,8 +43,15 @@ set nocompatible
 
 " turn syntax highlighting on
 set t_Co=256
-syn on
-colors lucius
+syntax on
+colors onehalfdark
+let g:airline_theme='onehalfdark'
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
+" colors lucius
 " colors Tomorrow-Night
 
 " turn line numbers / ruler / cursorline on
