@@ -23,11 +23,11 @@ export COMPILER=intel
 
 # Intel compiler and MPI setting
 if [ "$COMPILER" = intel ]; then
-  source /opt/intel/parallel_studio_xe_2017/bin/psxevars.sh
+  source /opt/intel/parallel_studio_xe_2019/bin/psxevars.sh
   export I_MPI_CC=icc
   export I_MPI_CXX=icpc
   export I_MPI_FC=ifort
-  export I_MPI_F77=ifort
+  #export I_MPI_F77=ifort
   export I_MPI_F90=ifort
 fi
 
