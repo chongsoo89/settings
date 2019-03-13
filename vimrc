@@ -102,10 +102,12 @@ set nofoldenable
 " Mapping for Makefile
 " let &makeprg = 'if [ -f Makefile ]; then make $*; else make $* -C ..; fi'
 let &makeprg = 'FILEMK=Makefile; PATHMK=./; DEPTH=1; while [ $DEPTH -lt 5 ]; do if [ -f $PATHMK$FILEMK ]; then make $* -C $PATHMK; break; else PATHMK=../$PATHMK; let DEPTH+=1; fi done'
-nmap <f5> :make mode=debug compiler=intel<CR>
-nmap <S-f5> :make compiler=intel<CR>
+nmap <f5> :make mode=debug compiler=intel -j2<CR>
+nmap <S-f5> :make compiler=intel -j2<CR>
 nmap <f6> :make clean<CR>
 nmap <S-f6> :make distclean<CR>
+nmap <f4> :cn<CR>
+nmap <f3> :cp<CR>
 
 " Mapping for buffers
 nnoremap <Tab> :bnext<CR>
