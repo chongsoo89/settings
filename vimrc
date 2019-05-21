@@ -3,8 +3,13 @@ set nocompatible " be iMproved, required
 filetype off " required
 
 " set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+if has('win32')
+  set rtp+=~/vimfiles/bundle/Vundle.vim
+  call vundle#begin('~/vimfiles/bundle/')
+elseif has('unix')
+  set rtp+=~/.vim/bundle/Vundle.vim
+  call vundle#begin()
+endif
 
 " Let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
@@ -14,7 +19,7 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
 Plugin 'bling/vim-airline'
-Plugin 'sonph/onehalf', {'rtp': 'vim/'}
+Plugin 'sonph/onehalf', {'rtp': 'vim'}
 
 " All of yours Plugins must be added before the folloing line
 call vundle#end() " required
@@ -98,6 +103,11 @@ filetype plugin indent on
 
 " Disable folding
 set nofoldenable
+
+" Option for windows
+if has('win32')
+  language message en
+endif
 
 " Mapping for Makefile
 " let &makeprg = 'if [ -f Makefile ]; then make $*; else make $* -C ..; fi'
