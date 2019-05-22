@@ -125,9 +125,9 @@ endfunction
 
 " Function for CMake configure.
 function! CMakeConfigure()
+  call CMakeDistClean()
   let build_dir = FindFolder("build")
   exec 'cd' build_dir
-  call CMakeDistClean()
   if has('win32')
     exec "!powershell -command \"cmake -G \\\"Visual Studio 15 2017 Win64\\\" -T \\\"Intel C++ Compiler 19.0\\\" ..\""
   else
@@ -170,6 +170,14 @@ function! CMakeDistClean()
     silent echo system("powershell -command \"remove-item * -exclude .gitignore -recurse -force\"")
   else
     silent echo system("rm -rf *")
+  endif
+  let bin_dir = FindFolder("bin")
+  exec 'cd' bin_dir
+  if has('win32')
+    silent echo system("powershell -command \"remove-item Debug -recurse -force\"")
+    silent echo system("powershell -command \"remove-item Release -recurse -force\"")
+  else
+    silent echo system("rm -rf shaco")
   endif
   echom "distclean complete"
 endfunction
