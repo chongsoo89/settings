@@ -104,18 +104,82 @@ filetype plugin indent on
 " Disable folding
 set nofoldenable
 
-" Option for windows
-if has('win32')
-  language message en
-endif
-
 " Mapping for Makefile
-" let &makeprg = 'if [ -f Makefile ]; then make $*; else make $* -C ..; fi'
-let &makeprg = 'FILEMK=Makefile; PATHMK=./; DEPTH=1; while [ $DEPTH -lt 5 ]; do if [ -f $PATHMK$FILEMK ]; then make $* -C $PATHMK; break; else PATHMK=../$PATHMK; let DEPTH+=1; fi done'
-nmap <f5> :make mode=debug compiler=intel -j2<CR>
-nmap <S-f5> :make compiler=intel -j2<CR>
-nmap <f6> :make clean<CR>
-nmap <S-f6> :make distclean<CR>
+"let &makeprg = 'FILEMK=Makefile; PATHMK=./; DEPTH=1; while [ $DEPTH -lt 5 ]; do if [ -f $PATHMK$FILEMK ]; then make $* -C $PATHMK; break; else PATHMK=../$PATHMK; let DEPTH+=1; fi done'
+"nmap <f5> :make mode=debug compiler=intel -j2<CR>
+"nmap <S-f5> :make compiler=intel -j2<CR>
+"nmap <f6> :make clean<CR>
+"nmap <S-f6> :make distclean<CR>
+
+" Function for finding folder.
+function! FindFolder(name)
+  let search_dir = fnameescape(expand("%:p:h"))
+  for depth in [0, 1, 2]
+    let build_dir = finddir(a:name, search_dir)
+    if build_dir == ""
+      let search_dir = fnamemodify(search_dir, ":h")
+    endif
+  endfor
+  return build_dir
+endfunction
+
+" Function for CMake configure.
+function! CMakeConfigure(type)
+  let build_dir = FindFolder("build")
+  exec 'cd' build_dir
+  if has('win32')
+    exec "!powershell -command \"cmake -G \\\"Visual Studio 15 2017 Win64\\\" -T \\\"Intel C++ Compiler 19.0\\\" ..\""
+  else
+    exec "!CC=icc CXX=icpc cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=" . a:type . " .."
+  endif
+endfunction
+
+" Function for CMake configure clean.
+function! CMakeConfigureClean()
+  let build_dir = FindFolder("build")
+  exec 'cd' build_dir
+  if has('win32')
+    silent echo system("powershell -command \"remove-item * -recurse -force\"")
+  else
+    silent echo system("rm -rf *")
+  endif
+  echom "Remove CMake configuration files"
+endfunction
+
+" Function for CMake build.
+function! CMakeBuild(type)
+  let build_dir = FindFolder("build")
+  exec 'cd' build_dir
+  if has('win32')
+    exec "!powershell -command \"cmake --build . --target ALL_BUILD --config " . a:type . "\""
+  else
+    call CMakeConfigure(a:type) " to ensure build type
+    let &makeprg="cmake --build . --target all"
+    make
+  endif
+endfunction
+
+" Function for CMake build clean.
+function! CMakeBuildClean()
+  let build_dir = FindFolder("build")
+  exec 'cd' build_dir
+  if has('win32')
+    silent echo system("powershell -command \"remove-item *.dir -recurse -force\"")
+  else
+    silent echo system("rm -rf *.dir")
+  endif
+  echom "Remove object files"
+endfunction
+
+" Mapping for CMake processes
+nmap <f5> :call CMakeConfigure("Debug")<CR>
+nmap <f6> :call CMakeConfigure("Release")<CR>
+nmap <f7> :call CMakeConfigureClean()<CR>
+nmap <S-f5> :call CMakeBuild("Debug")<CR>
+nmap <S-f6> :call CMakeBuild("Release")<CR>
+nmap <S-f7> :call CMakeBuildClean()<CR>
+
+" Mapping for debugging
 nmap <f4> :cn<CR>
 nmap <f3> :cp<CR>
 
@@ -125,13 +189,13 @@ nnoremap <S-Tab> :bprevious<CR>
 nnoremap <C-X> :bdelete<CR>
 
 " LatexSuite
-let Tex_FoldedSections=""
-let Tex_FoldedEnvironments=""
-let Tex_FoldedMisc=""
-let g:Tex_DefaultTargetFormat='pdf'
-let g:Tex_MultipleCompileFormats='pdf'
-let g:Tex_CompileRule_pdf = 'mkdir -p build && pdflatex -output-directory=build -interaction=nonstopmode $* && cp *.bib build && cd build && bibtex %:r && cd .. && pdflatex -output-directory=build -interaction=nonstopmode $* && pdflatex -output-directory=build -interaction=nonstopmode $* && mv build/$*.pdf .'
-let g:Tex_ViewRule_pdf='evince'
+"let Tex_FoldedSections=""
+"let Tex_FoldedEnvironments=""
+"let Tex_FoldedMisc=""
+"let g:Tex_DefaultTargetFormat='pdf'
+"let g:Tex_MultipleCompileFormats='pdf'
+"let g:Tex_CompileRule_pdf = 'mkdir -p build && pdflatex -output-directory=build -interaction=nonstopmode $* && cp *.bib build && cd build && bibtex %:r && cd .. && pdflatex -output-directory=build -interaction=nonstopmode $* && pdflatex -output-directory=build -interaction=nonstopmode $* && mv build/$*.pdf .'
+"let g:Tex_ViewRule_pdf='evince'
 "if has('gui_running')
 "  set grepprg=grep\ -nH\ $*
 "  let g:tex_flavor='latex'
