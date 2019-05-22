@@ -124,26 +124,15 @@ function! FindFolder(name)
 endfunction
 
 " Function for CMake configure.
-function! CMakeConfigure(type)
+function! CMakeConfigure()
   let build_dir = FindFolder("build")
   exec 'cd' build_dir
+  call CMakeDistClean()
   if has('win32')
     exec "!powershell -command \"cmake -G \\\"Visual Studio 15 2017 Win64\\\" -T \\\"Intel C++ Compiler 19.0\\\" ..\""
   else
-    exec "!CC=icc CXX=icpc cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=" . a:type . " .."
+    exec "!CC=icc CXX=icpc cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=Release .."
   endif
-endfunction
-
-" Function for CMake configure clean.
-function! CMakeConfigureClean()
-  let build_dir = FindFolder("build")
-  exec 'cd' build_dir
-  if has('win32')
-    silent echo system("powershell -command \"remove-item * -recurse -force\"")
-  else
-    silent echo system("rm -rf *")
-  endif
-  echom "Remove CMake configuration files"
 endfunction
 
 " Function for CMake build.
@@ -153,14 +142,16 @@ function! CMakeBuild(type)
   if has('win32')
     exec "!powershell -command \"cmake --build . --target ALL_BUILD --config " . a:type . "\""
   else
-    call CMakeConfigure(a:type) " to ensure build type
-    let &makeprg="cmake --build . --target all"
+    " configure again to ensure build type.
+    echom "wait ..."
+    silent echo system("CC=icc CXX=icpc cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=" . a:type . " ..")
+    let &makeprg="cmake --build . --target all -- -j3"
     make
   endif
 endfunction
 
-" Function for CMake build clean.
-function! CMakeBuildClean()
+" Function for CMake clean.
+function! CMakeClean()
   let build_dir = FindFolder("build")
   exec 'cd' build_dir
   if has('win32')
@@ -168,16 +159,27 @@ function! CMakeBuildClean()
   else
     silent echo system("rm -rf *.dir")
   endif
-  echom "Remove object files"
+  echom "clean complete"
+endfunction
+
+" Function for CMake distclean.
+function! CMakeDistClean()
+  let build_dir = FindFolder("build")
+  exec 'cd' build_dir
+  if has('win32')
+    silent echo system("powershell -command \"remove-item * -recurse -force\"")
+  else
+    silent echo system("rm -rf *")
+  endif
+  echom "distclean complete"
 endfunction
 
 " Mapping for CMake processes
-nmap <f5> :call CMakeConfigure("Debug")<CR>
-nmap <f6> :call CMakeConfigure("Release")<CR>
-nmap <f7> :call CMakeConfigureClean()<CR>
-nmap <S-f5> :call CMakeBuild("Debug")<CR>
-nmap <S-f6> :call CMakeBuild("Release")<CR>
-nmap <S-f7> :call CMakeBuildClean()<CR>
+nmap <f5> :call CMakeBuild("Debug")<CR>
+nmap <S-f5> :call CMakeBuild("Release")<CR>
+nmap <f6> :call CMakeClean()<CR>
+nmap <S-f6> :call CMakeDistClean()<CR>
+nmap <f7> :call CMakeConfigure()<CR>
 
 " Mapping for debugging
 nmap <f4> :cn<CR>
