@@ -112,31 +112,72 @@ set nofoldenable
 "nmap <S-f6> :make distclean<CR>
 
 " Function for finding folder.
-function FindFolder(name)
+function! FindFolder(name)
   let search_dir = fnameescape(expand("%:p:h"))
-  for depth in [0, 1, 2, 3, 4]
+  for depth in [0, 1, 2]
     let build_dir = finddir(a:name, search_dir)
-    if build_dir != ""
-      return build_dir
+    if build_dir == ""
+      let search_dir = fnamemodify(search_dir, ":h")
     endif
-    let search_dir = fnamemodify(search_dir, ":h")
   endfor
-  echoerr "Cannot find \"" . a:name . "\" directory."
+  return build_dir
 endfunction
 
 " Function for CMake configure.
-function CMakeConfigure(type)
+function! CMakeConfigure(type)
   let build_dir = FindFolder("build")
   exec 'cd' build_dir
   if has('win32')
-    exec '!cmake -G "Visual Studio 15 2017 Win64" -T "Intel C++ Compiler 19.0" ..'
-    let &makeprg = "cmake --build " . shellescape(build_dir) . " --config " . a:type . "\""
+    exec "!powershell -command \"cmake -G \\\"Visual Studio 15 2017 Win64\\\" -T \\\"Intel C++ Compiler 19.0\\\" ..\""
   else
-    exec '!CC=icc CXX=icpc cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE=' . a:type . ' ..'
-    let &makeprg = 'cmake --build ' . shellescape(build_dir)
+    exec "!CC=icc CXX=icpc cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=" . a:type . " .."
   endif
-  exec 'cd -'
 endfunction
+
+" Function for CMake configure clean.
+function! CMakeConfigureClean()
+  let build_dir = FindFolder("build")
+  exec 'cd' build_dir
+  if has('win32')
+    silent echo system("powershell -command \"remove-item * -recurse -force\"")
+  else
+    silent echo system("rm -rf *")
+  endif
+  echom "Remove CMake configuration files"
+endfunction
+
+" Function for CMake build.
+function! CMakeBuild(type)
+  let build_dir = FindFolder("build")
+  exec 'cd' build_dir
+  if has('win32')
+    exec "!powershell -command \"cmake --build . --target ALL_BUILD --config " . a:type . "\""
+  else
+    call CMakeConfigure(a:type) " to ensure build type
+    let &makeprg="cmake --build . --target all"
+    make
+  endif
+endfunction
+
+" Function for CMake build clean.
+function! CMakeBuildClean()
+  let build_dir = FindFolder("build")
+  exec 'cd' build_dir
+  if has('win32')
+    silent echo system("powershell -command \"remove-item *.dir -recurse -force\"")
+  else
+    silent echo system("rm -rf *.dir")
+  endif
+  echom "Remove object files"
+endfunction
+
+" Mapping for CMake processes
+nmap <f5> :call CMakeConfigure("Debug")<CR>
+nmap <f6> :call CMakeConfigure("Release")<CR>
+nmap <f7> :call CMakeConfigureClean()<CR>
+nmap <S-f5> :call CMakeBuild("Debug")<CR>
+nmap <S-f6> :call CMakeBuild("Release")<CR>
+nmap <S-f7> :call CMakeBuildClean()<CR>
 
 " Mapping for debugging
 nmap <f4> :cn<CR>
