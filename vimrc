@@ -145,7 +145,7 @@ function! CMakeBuild(type)
     " configure again to ensure build type.
     echom "wait ..."
     silent echo system("CC=icc CXX=icpc cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=" . a:type . " ..")
-    let &makeprg="cmake --build . --target all -- -j3"
+    let &makeprg="cmake --build . --target all -- -j2 VERBOSE=1"
     make
   endif
 endfunction
@@ -167,7 +167,7 @@ function! CMakeDistClean()
   let build_dir = FindFolder("build")
   exec 'cd' build_dir
   if has('win32')
-    silent echo system("powershell -command \"remove-item * -recurse -force\"")
+    silent echo system("powershell -command \"remove-item * -exclude .gitignore -recurse -force\"")
   else
     silent echo system("rm -rf *")
   endif
