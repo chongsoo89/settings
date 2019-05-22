@@ -6,7 +6,7 @@
 # fi
 
 # Alias settings
-alias ll='ls -l'
+alias ll='ls -lh'
 alias rm='rm -i'
 alias rcp='rsync -avP'
 alias tart='tar tvvzf'
@@ -32,43 +32,33 @@ if [ "$COMPILER" = intel ]; then
 fi
 
 # Library version
-export METIS_VERSION=5.1.0
+export HDF5_VERSION=1.10.5
+export CGNS_VERSION=3.4.0
 export PARMETIS_VERSION=4.0.3
-export SZIP_VERSION=2.1.1
-export HDF5_VERSION=1.8.20
-export CGNS_VERSION=3.3.1
 export BOOST_VERSION=1.61.0
 export BLAZE_VERSION=3.1
 
-# Metis
-export PATH=$PATH:/opt/lib_$COMPILER/metis/$METIS_VERSION/bin
-export CPATH=$CPATH:/opt/lib_$COMPILER/metis/$METIS_VERSION/include
-export LIBRARY_PATH=$LIBRARY_PATH:/opt/lib_$COMPILER/metis/$METIS_VERSION/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/lib_$COMPILER/metis/$METIS_VERSION/lib
+# HDF5 for cmake
+export HDF5_DIR=/opt/lib_$COMPILER/hdf5/$HDF5_VERSION/share/cmake
+export PATH=/opt/lib_$COMPILER/hdf5/$HDF5_VERSION/bin:$PATH
+export INCLUDE=/opt/lib_$COMPILER/hdf5/$HDF5_VERSION/include:$INCLUDE
+export LIB=/opt/lib_$COMPILER/hdf5/$HDF5_VERSION/lib:$LIB
 
-# Parmetis
-export PATH=$PATH:/opt/lib_$COMPILER/parmetis/$PARMETIS_VERSION/bin
-export CPATH=$CPATH:/opt/lib_$COMPILER/parmetis/$PARMETIS_VERSION/include
-export LIBRARY_PATH=$LIBRARY_PATH:/opt/lib_$COMPILER/parmetis/$PARMETIS_VERSION/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/lib_$COMPILER/parmetis/$PARMETIS_VERSION/lib
+# CGNS for cmake
+export PATH=/opt/lib_$COMPILER/cgns/$CGNS_VERSION/bin/cgnstools:$PATH
+export PATH=/opt/lib_$COMPILER/cgns/$CGNS_VERSION/bin:$PATH
+export INCLUDE=/opt/lib_$COMPILER/cgns/$CGNS_VERSION/include:$INCLUDE
+export LIB=/opt/lib_$COMPILER/cgns/$CGNS_VERSION/lib:$LIB
 
-# SZIP
-export CPATH=$CPATH:/opt/lib_$COMPILER/szip/$SZIP_VERSION/include
-export LIBRARY_PATH=$LIBRARY_PATH:/opt/lib_$COMPILER/szip/$SZIP_VERSION/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/lib_$COMPILER/szip/$SZIP_VERSION/lib
+# ParMETIS for cmake
+export PATH=/opt/lib_$COMPILER/parmetis/$PARMETIS_VERSION/bin:$PATH
+export INCLUDE=/opt/lib_$COMPILER/parmetis/$PARMETIS_VERSION/include:$INCLUDE
+export LIB=/opt/lib_$COMPILER/parmetis/$PARMETIS_VERSION/lib:$LIB
 
-# HDF5
-export PATH=$PATH:/opt/lib_$COMPILER/hdf5/$HDF5_VERSION/bin
-export CPATH=$CPATH:/opt/lib_$COMPILER/hdf5/$HDF5_VERSION/include
-export LIBRARY_PATH=$LIBRARY_PATH:/opt/lib_$COMPILER/hdf5/$HDF5_VERSION/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/lib_$COMPILER/hdf5/$HDF5_VERSION/lib
-
-# CGNS
-export PATH=$PATH:/opt/lib_$COMPILER/cgns/$CGNS_VERSION/bin
-export PATH=$PATH:/opt/lib_$COMPILER/cgns/$CGNS_VERSION/bin/cgnstools
-export CPATH=$CPATH:/opt/lib_$COMPILER/cgns/$CGNS_VERSION/include
-export LIBRARY_PATH=$LIBRARY_PATH:/opt/lib_$COMPILER/cgns/$CGNS_VERSION/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/lib_$COMPILER/cgns/$CGNS_VERSION/lib
+# Linux standard environment variables
+export CPATH=$INCLUDE:$CPATH
+export LIBRARY_PATH=$LIB:$LIBRARY_PATH
+export LD_LIBRARY_PATH=$LIB:$LD_LIBRARY_PATH
 
 # Boost
 export CPATH=$CPATH:/opt/lib_$COMPILER/boost/$BOOST_VERSION/include
