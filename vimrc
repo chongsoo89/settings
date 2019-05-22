@@ -104,18 +104,41 @@ filetype plugin indent on
 " Disable folding
 set nofoldenable
 
-" Option for windows
-if has('win32')
-  language message en
-endif
-
 " Mapping for Makefile
-" let &makeprg = 'if [ -f Makefile ]; then make $*; else make $* -C ..; fi'
-let &makeprg = 'FILEMK=Makefile; PATHMK=./; DEPTH=1; while [ $DEPTH -lt 5 ]; do if [ -f $PATHMK$FILEMK ]; then make $* -C $PATHMK; break; else PATHMK=../$PATHMK; let DEPTH+=1; fi done'
-nmap <f5> :make mode=debug compiler=intel -j2<CR>
-nmap <S-f5> :make compiler=intel -j2<CR>
-nmap <f6> :make clean<CR>
-nmap <S-f6> :make distclean<CR>
+"let &makeprg = 'FILEMK=Makefile; PATHMK=./; DEPTH=1; while [ $DEPTH -lt 5 ]; do if [ -f $PATHMK$FILEMK ]; then make $* -C $PATHMK; break; else PATHMK=../$PATHMK; let DEPTH+=1; fi done'
+"nmap <f5> :make mode=debug compiler=intel -j2<CR>
+"nmap <S-f5> :make compiler=intel -j2<CR>
+"nmap <f6> :make clean<CR>
+"nmap <S-f6> :make distclean<CR>
+
+" Function for finding folder.
+function FindFolder(name)
+  let search_dir = fnameescape(expand("%:p:h"))
+  for depth in [0, 1, 2, 3, 4]
+    let build_dir = finddir(a:name, search_dir)
+    if build_dir != ""
+      return build_dir
+    endif
+    let search_dir = fnamemodify(search_dir, ":h")
+  endfor
+  echoerr "Cannot find \"" . a:name . "\" directory."
+endfunction
+
+" Function for CMake configure.
+function CMakeConfigure(type)
+  let build_dir = FindFolder("build")
+  exec 'cd' build_dir
+  if has('win32')
+    exec '!cmake -G "Visual Studio 15 2017 Win64" -T "Intel C++ Compiler 19.0" ..'
+    let &makeprg = "cmake --build " . shellescape(build_dir) . " --config " . a:type . "\""
+  else
+    exec '!CC=icc CXX=icpc cmake -G "Unix Makefiles" -D CMAKE_BUILD_TYPE=' . a:type . ' ..'
+    let &makeprg = 'cmake --build ' . shellescape(build_dir)
+  endif
+  exec 'cd -'
+endfunction
+
+" Mapping for debugging
 nmap <f4> :cn<CR>
 nmap <f3> :cp<CR>
 
@@ -125,13 +148,13 @@ nnoremap <S-Tab> :bprevious<CR>
 nnoremap <C-X> :bdelete<CR>
 
 " LatexSuite
-let Tex_FoldedSections=""
-let Tex_FoldedEnvironments=""
-let Tex_FoldedMisc=""
-let g:Tex_DefaultTargetFormat='pdf'
-let g:Tex_MultipleCompileFormats='pdf'
-let g:Tex_CompileRule_pdf = 'mkdir -p build && pdflatex -output-directory=build -interaction=nonstopmode $* && cp *.bib build && cd build && bibtex %:r && cd .. && pdflatex -output-directory=build -interaction=nonstopmode $* && pdflatex -output-directory=build -interaction=nonstopmode $* && mv build/$*.pdf .'
-let g:Tex_ViewRule_pdf='evince'
+"let Tex_FoldedSections=""
+"let Tex_FoldedEnvironments=""
+"let Tex_FoldedMisc=""
+"let g:Tex_DefaultTargetFormat='pdf'
+"let g:Tex_MultipleCompileFormats='pdf'
+"let g:Tex_CompileRule_pdf = 'mkdir -p build && pdflatex -output-directory=build -interaction=nonstopmode $* && cp *.bib build && cd build && bibtex %:r && cd .. && pdflatex -output-directory=build -interaction=nonstopmode $* && pdflatex -output-directory=build -interaction=nonstopmode $* && mv build/$*.pdf .'
+"let g:Tex_ViewRule_pdf='evince'
 "if has('gui_running')
 "  set grepprg=grep\ -nH\ $*
 "  let g:tex_flavor='latex'
