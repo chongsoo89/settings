@@ -40,6 +40,9 @@ let g:airline#extensions#tabline#buffer_nr_show=1
 let g:airline#extensions#tabline#formatter='unique_tail'
 autocmd BufDelete * call airline#extensions#tabline#buflist#invalidate()
 
+" set language and message
+language message en
+
 " set UTF-8 encoding
 set encoding=utf-8
 
