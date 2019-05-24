@@ -2,6 +2,9 @@
 set nocompatible " be iMproved, required
 filetype off " required
 
+" set default git protocal for vundle
+let g:vundle_default_git_proto = 'git'
+
 " set the runtime path to include Vundle and initialize
 if has('win32')
   set rtp+=~/vimfiles/bundle/Vundle.vim
@@ -41,7 +44,9 @@ let g:airline#extensions#tabline#formatter='unique_tail'
 autocmd BufDelete * call airline#extensions#tabline#buflist#invalidate()
 
 " set language and message
-language message en
+if has('win32')
+  language message en
+endif
 
 " set UTF-8 encoding
 set encoding=utf-8
