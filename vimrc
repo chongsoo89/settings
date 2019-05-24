@@ -23,6 +23,7 @@ Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fugitive'
 Plugin 'bling/vim-airline'
 Plugin 'sonph/onehalf', {'rtp': 'vim'}
+"Plugin 'elzr/vim-json' " for cluster
 
 " All of yours Plugins must be added before the folloing line
 call vundle#end() " required
