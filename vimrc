@@ -120,83 +120,66 @@ set nofoldenable
 "nmap <f6> :make clean<CR>
 "nmap <S-f6> :make distclean<CR>
 
-" Function for finding folder.
-function! FindFolder(name)
-  let search_dir = fnameescape(expand("%:p:h"))
-  for depth in [0, 1, 2]
-    let build_dir = finddir(a:name, search_dir)
-    if build_dir == ""
-      let search_dir = fnamemodify(search_dir, ":h")
-    endif
-  endfor
-  return build_dir
-endfunction
-
 " Function for CMake configure.
-function! CMakeConfigure()
+function! CMakeConfigure(type)
   call CMakeDistClean()
-  let build_dir = FindFolder("build")
-  exec 'cd' build_dir
+  exec 'cd' finddir("build", ';')
   if has('win32')
-    exec "!powershell -command \"cmake -G \\\"Visual Studio 15 2017 Win64\\\" -T \\\"Intel C++ Compiler 19.0\\\" ..\""
+    exec "!cmake -G \"NMake Makefiles\" -D CMAKE_C_COMPILER=icl -D CMAKE_CXX_COMPILER=icl -D CMAKE_BUILD_TYPE=" . a:type . " .."
   else
-    exec "!CC=icc CXX=icpc cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=Release .."
+    exec "!CC=icc CXX=icpc cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=" . a:type . " .."
   endif
+  exec 'cd' expand("%:p:h")
 endfunction
 
 " Function for CMake build.
-function! CMakeBuild(type)
-  let build_dir = FindFolder("build")
-  exec 'cd' build_dir
+function! CMakeBuild()
+  exec 'cd' finddir("build", ';')
   if has('win32')
-    exec "!powershell -command \"cmake --build . --target ALL_BUILD --config " . a:type . "\""
+    compiler msvc
+    make VERBOSE=1
   else
-    " configure again to ensure build type.
-    echom "wait ..."
-    silent echo system("CC=icc CXX=icpc cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=" . a:type . " ..")
-    let &makeprg="cmake --build . --target all -- -j2 VERBOSE=1"
-    make
+    make VERBOSE=1 -j2
   endif
+  exec 'cd' expand("%:p:h")
 endfunction
 
 " Function for CMake clean.
 function! CMakeClean()
-  let build_dir = FindFolder("build")
-  exec 'cd' build_dir
+  exec 'cd' finddir("build", ';')
   if has('win32')
     silent echo system("powershell -command \"remove-item *.dir -recurse -force\"")
   else
     silent echo system("rm -rf *.dir")
   endif
+  exec 'cd' expand("%:p:h")
   echom "clean complete"
 endfunction
 
 " Function for CMake distclean.
 function! CMakeDistClean()
-  let build_dir = FindFolder("build")
-  exec 'cd' build_dir
+  exec 'cd' finddir("build", ';')
   if has('win32')
     silent echo system("powershell -command \"remove-item * -exclude .gitignore -recurse -force\"")
   else
     silent echo system("rm -rf *")
   endif
-  let bin_dir = FindFolder("bin")
-  exec 'cd' bin_dir
+  exec 'cd' finddir("bin", ';')
   if has('win32')
-    silent echo system("powershell -command \"remove-item Debug -recurse -force\"")
-    silent echo system("powershell -command \"remove-item Release -recurse -force\"")
+    silent echo system("powershell -command \"remove-item shaco.* -recurse -force\"")
   else
     silent echo system("rm -rf shaco")
   endif
+  exec 'cd' expand("%:p:h")
   echom "distclean complete"
 endfunction
 
 " Mapping for CMake processes
-nmap <f5> :call CMakeBuild("Debug")<CR>
-nmap <S-f5> :call CMakeBuild("Release")<CR>
+nmap <f5> :call CMakeBuild()<CR>
 nmap <f6> :call CMakeClean()<CR>
 nmap <S-f6> :call CMakeDistClean()<CR>
-nmap <f7> :call CMakeConfigure()<CR>
+nmap <f7> :call CMakeConfigure("Debug")<CR>
+nmap <S-f7> :call CMakeConfigure("Release")<CR>
 
 " Mapping for debugging
 nmap <f4> :cn<CR>
