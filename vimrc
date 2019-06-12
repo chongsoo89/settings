@@ -72,6 +72,8 @@ endif
 set number
 "set ruler
 set cursorline
+hi clear CursorLine
+hi CursorLine gui=underline cterm=underline
 
 " display status line always
 set laststatus=2
@@ -127,7 +129,7 @@ function! CMakeConfigure(type)
   if has('win32')
     exec "!cmake -G \"NMake Makefiles\" -D CMAKE_C_COMPILER=icl -D CMAKE_CXX_COMPILER=icl -D CMAKE_BUILD_TYPE=" . a:type . " .."
   else
-    exec "!CC=icc CXX=icpc cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=" . a:type . " .."
+    exec "!cmake -G \"Unix Makefiles\" -D CMAKE_C_COMPILER=icc -D CMAKE_CXX_COMPILER=icpc -D CMAKE_BUILD_TYPE=" . a:type . " .."
   endif
   exec 'cd' expand("%:p:h")
 endfunction
@@ -148,38 +150,34 @@ endfunction
 function! CMakeClean()
   exec 'cd' finddir("build", ';')
   if has('win32')
-    silent echo system("powershell -command \"remove-item *.dir -recurse -force\"")
+    compiler msvc
+    make clean VERBOSE=1
   else
-    silent echo system("rm -rf *.dir")
+    make clean VERBOSE=1
   endif
   exec 'cd' expand("%:p:h")
-  echom "clean complete"
 endfunction
 
 " Function for CMake distclean.
 function! CMakeDistClean()
-  exec 'cd' finddir("build", ';')
+  let bin_dir = finddir("bin", ';')
+  let build_dir = finddir("build", ';')
   if has('win32')
-    silent echo system("powershell -command \"remove-item * -exclude .gitignore -recurse -force\"")
+    silent echo system("powershell -command \"remove-item " . bin_dir . "\\shaco.* -recurse -force\"")
+    silent echo system("powershell -command \"remove-item " . build_dir . "\\* -exclude .gitignore -recurse -force\"")
   else
-    silent echo system("rm -rf *")
+    silent echo system("rm -rf " . bin_dir . "/shaco")
+    silent echo system("rm -rf " . build_dir . "/*")
   endif
-  exec 'cd' finddir("bin", ';')
-  if has('win32')
-    silent echo system("powershell -command \"remove-item shaco.* -recurse -force\"")
-  else
-    silent echo system("rm -rf shaco")
-  endif
-  exec 'cd' expand("%:p:h")
   echom "distclean complete"
 endfunction
 
 " Mapping for CMake processes
 nmap <f5> :call CMakeBuild()<CR>
 nmap <f6> :call CMakeClean()<CR>
-nmap <S-f6> :call CMakeDistClean()<CR>
 nmap <f7> :call CMakeConfigure("Debug")<CR>
-nmap <S-f7> :call CMakeConfigure("Release")<CR>
+nmap <f8> :call CMakeConfigure("Release")<CR>
+nmap <f9> :call CMakeDistClean()<CR>
 
 " Mapping for debugging
 nmap <f4> :cn<CR>
@@ -190,16 +188,7 @@ nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 nnoremap <C-X> :bdelete<CR>
 
-" LatexSuite
-"let Tex_FoldedSections=""
-"let Tex_FoldedEnvironments=""
-"let Tex_FoldedMisc=""
-"let g:Tex_DefaultTargetFormat='pdf'
-"let g:Tex_MultipleCompileFormats='pdf'
-"let g:Tex_CompileRule_pdf = 'mkdir -p build && pdflatex -output-directory=build -interaction=nonstopmode $* && cp *.bib build && cd build && bibtex %:r && cd .. && pdflatex -output-directory=build -interaction=nonstopmode $* && pdflatex -output-directory=build -interaction=nonstopmode $* && mv build/$*.pdf .'
-"let g:Tex_ViewRule_pdf='evince'
-"if has('gui_running')
-"  set grepprg=grep\ -nH\ $*
-"  let g:tex_flavor='latex'
-"  set gfn=Inconsolata\ Medium\ 15
-"endif
+" Font for gvim
+if has("gui_running")
+  set guifont=D2Coding:h12
+endif
