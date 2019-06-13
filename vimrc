@@ -183,6 +183,9 @@ nmap <f9> :call CMakeDistClean()<CR>
 nmap <f4> :cn<CR>
 nmap <f3> :cp<CR>
 
+" Mapping for redrawing
+nmap <f2> :redraw!<CR>
+
 " Mapping for buffers
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
