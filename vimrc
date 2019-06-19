@@ -43,6 +43,7 @@ let g:airline#extensions#tabline#enabled=1
 let g:airline#extensions#tabline#buffer_nr_show=1
 let g:airline#extensions#tabline#formatter='unique_tail'
 autocmd BufDelete * call airline#extensions#tabline#buflist#invalidate()
+let g:vim_json_syntax_conceal=0
 
 " set language and message
 if has('win32')
