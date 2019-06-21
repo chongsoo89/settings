@@ -3,7 +3,7 @@ set nocompatible " be iMproved, required
 filetype off " required
 
 " set default git protocal for vundle
-let g:vundle_default_git_proto = 'git'
+" let g:vundle_default_git_proto = 'git'
 
 " set the runtime path to include Vundle and initialize
 if has('win32')
