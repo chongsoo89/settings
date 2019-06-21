@@ -1,0 +1,10 @@
+[user]
+	name = Changsoo Lee
+	email = chongsoo89@gmail.com
+[core]
+	compression = 0
+	editor = vim
+[color]
+	ui = auto
+[alias]
+	lg = log --graph --decorate --all
