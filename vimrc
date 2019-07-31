@@ -73,8 +73,8 @@ endif
 set number
 "set ruler
 set cursorline
-hi clear CursorLine
-hi CursorLine gui=underline cterm=underline
+" hi clear CursorLine
+" hi CursorLine gui=underline cterm=underline
 
 " display status line always
 set laststatus=2
@@ -140,9 +140,9 @@ function! CMakeBuild()
   exec 'cd' finddir("build", ';')
   if has('win32')
     compiler msvc
-    make VERBOSE=1
+    make
   else
-    make VERBOSE=1 -j2
+    make -j2
   endif
   exec 'cd' expand("%:p:h")
 endfunction
@@ -152,9 +152,9 @@ function! CMakeClean()
   exec 'cd' finddir("build", ';')
   if has('win32')
     compiler msvc
-    make clean VERBOSE=1
+    make clean
   else
-    make clean VERBOSE=1
+    make clean
   endif
   exec 'cd' expand("%:p:h")
 endfunction
