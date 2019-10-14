@@ -130,7 +130,7 @@ function! CMakeConfigure(type)
   if has('win32')
     exec "!cmake -G \"NMake Makefiles\" -D CMAKE_C_COMPILER=icl -D CMAKE_CXX_COMPILER=icl -D CMAKE_BUILD_TYPE=" . a:type . " .."
   else
-    exec "!cmake -G \"Unix Makefiles\" -D CMAKE_C_COMPILER=icc -D CMAKE_CXX_COMPILER=icpc -D CMAKE_BUILD_TYPE=" . a:type . " .."
+    exec "!cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=" . a:type . " .."
   endif
   exec 'cd' expand("%:p:h")
 endfunction
@@ -176,9 +176,9 @@ endfunction
 " Mapping for CMake processes
 nmap <f5> :call CMakeBuild()<CR>
 nmap <f6> :call CMakeClean()<CR>
-nmap <f7> :call CMakeConfigure("Debug")<CR>
-nmap <f8> :call CMakeConfigure("Release")<CR>
-nmap <f9> :call CMakeDistClean()<CR>
+nmap <S-f5> :call CMakeConfigure("Debug")<CR>
+nmap <S-f6> :call CMakeConfigure("Release")<CR>
+nmap <f8> :call CMakeDistClean()<CR>
 
 " Mapping for debugging
 nmap <f4> :cn<CR>
@@ -191,8 +191,3 @@ nmap <f2> :redraw!<CR>
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 nnoremap <C-X> :bdelete<CR>
-
-" Font for gvim
-if has("gui_running")
-  set guifont=D2Coding:h12
-endif

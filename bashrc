@@ -18,8 +18,8 @@ alias tarx='tar xvvzf'
 #ulimit -c unlimited
 
 # Library setting
-#export COMPILER=gcc
-export COMPILER=intel
+export COMPILER=gcc
+#export COMPILER=intel
 
 # Intel compiler and MPI setting
 if [ "$COMPILER" = intel ]; then
@@ -35,8 +35,6 @@ fi
 export HDF5_VERSION=1.10.5
 export CGNS_VERSION=3.4.0
 export PARMETIS_VERSION=4.0.3
-export BOOST_VERSION=1.61.0
-export BLAZE_VERSION=3.1
 
 # HDF5 for cmake
 export HDF5_DIR=/opt/lib_$COMPILER/hdf5/$HDF5_VERSION/share/cmake
@@ -59,11 +57,3 @@ export LIB=/opt/lib_$COMPILER/parmetis/$PARMETIS_VERSION/lib:$LIB
 export CPATH=$INCLUDE:$CPATH
 export LIBRARY_PATH=$LIB:$LIBRARY_PATH
 export LD_LIBRARY_PATH=$LIB:$LD_LIBRARY_PATH
-
-# Boost
-export CPATH=$CPATH:/opt/lib_$COMPILER/boost/$BOOST_VERSION/include
-export LIBRARY_PATH=$LIBRARY_PATH:/opt/lib_$COMPILER/boost/$BOOST_VERSION/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/lib_$COMPILER/boost/$BOOST_VERSION/lib
-
-# Blaze
-export CPATH=$CPATH:/opt/lib_$COMPILER/blaze/$BLAZE_VERSION/include
