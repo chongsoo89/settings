@@ -124,61 +124,38 @@ set nofoldenable
 "nmap <S-f6> :make distclean<CR>
 
 " Function for CMake configure.
-function! CMakeConfigure(type)
-  call CMakeDistClean()
-  exec 'cd' finddir("build", ';')
-  if has('win32')
-    exec "!cmake -G \"NMake Makefiles\" -D CMAKE_C_COMPILER=icl -D CMAKE_CXX_COMPILER=icl -D CMAKE_BUILD_TYPE=" . a:type . " .."
-  else
-    exec "!cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=" . a:type . " .."
-  endif
+function! CMakeConfigure()
+  call CMakeClean()
+  silent echo system("mkdir build/debug")
+  silent echo system("mkdir build/release")
+  exec 'cd' finddir("build/debug", ';')
+  exec "!cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=Debug ../.."
+  exec 'cd' finddir("build/release", ';')
+  exec "!cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=Release ../.."
   exec 'cd' expand("%:p:h")
 endfunction
 
 " Function for CMake build.
-function! CMakeBuild()
-  exec 'cd' finddir("build", ';')
-  if has('win32')
-    compiler msvc
-    make
-  else
-    make -j2
-  endif
+function! CMakeBuild(type)
+  exec 'cd' finddir("build/" . a:type, ';')
+  make -j2
   exec 'cd' expand("%:p:h")
 endfunction
 
 " Function for CMake clean.
 function! CMakeClean()
-  exec 'cd' finddir("build", ';')
-  if has('win32')
-    compiler msvc
-    make clean
-  else
-    make clean
-  endif
-  exec 'cd' expand("%:p:h")
-endfunction
-
-" Function for CMake distclean.
-function! CMakeDistClean()
   let bin_dir = finddir("bin", ';')
   let build_dir = finddir("build", ';')
-  if has('win32')
-    silent echo system("powershell -command \"remove-item " . bin_dir . "\\shaco.* -recurse -force\"")
-    silent echo system("powershell -command \"remove-item " . build_dir . "\\* -exclude .gitignore -recurse -force\"")
-  else
-    silent echo system("rm -rf " . bin_dir . "/shaco")
-    silent echo system("rm -rf " . build_dir . "/*")
-  endif
+  silent echo system("rm -rf " . bin_dir . "/shaco")
+  silent echo system("rm -rf " . build_dir . "/*")
   echom "distclean complete"
 endfunction
 
 " Mapping for CMake processes
-nmap <f5> :call CMakeBuild()<CR>
-nmap <f6> :call CMakeClean()<CR>
-nmap <S-f5> :call CMakeConfigure("Debug")<CR>
-nmap <S-f6> :call CMakeConfigure("Release")<CR>
-nmap <f8> :call CMakeDistClean()<CR>
+nmap <f5> :call CMakeBuild("debug")<CR>
+nmap <f6> :call CMakeBuild("release")<CR>
+nmap <f8> :call CMakeConfigure()<CR>
+nmap <S-f8> :call CMakeClean()<CR>
 
 " Mapping for debugging
 nmap <f4> :cn<CR>
