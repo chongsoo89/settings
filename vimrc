@@ -125,7 +125,6 @@ set nofoldenable
 
 " Function for CMake configure.
 function! CMakeConfigure()
-  call CMakeClean()
   exec 'cd' finddir("build", ';')
   silent echo system("mkdir debug")
   silent echo system("mkdir release")
@@ -144,20 +143,18 @@ function! CMakeBuild(type)
 endfunction
 
 " Function for CMake clean.
-function! CMakeClean()
-  exec 'cd' finddir("build", ';')
-  silent echo system("rm -rf ../bin/shaco")
-  silent echo system("rm -rf ./debug")
-  silent echo system("rm -rf ./release")
-  echom "distclean complete"
+function! CMakeClean(type)
+  exec 'cd' finddir("build/" . a:type, ';')
+  make clean
   exec 'cd' expand("%:p:h")
 endfunction
 
 " Mapping for CMake processes
 nmap <f5> :call CMakeBuild("debug")<CR>
 nmap <f6> :call CMakeBuild("release")<CR>
+nmap <S-f5> :call CMakeClean("debug")<CR>
+nmap <S-f6> :call CMakeClean("release")<CR>
 nmap <f8> :call CMakeConfigure()<CR>
-nmap <S-f8> :call CMakeClean()<CR>
 
 " Mapping for debugging
 nmap <f4> :cn<CR>
