@@ -126,11 +126,12 @@ set nofoldenable
 " Function for CMake configure.
 function! CMakeConfigure()
   call CMakeClean()
-  silent echo system("mkdir build/debug")
-  silent echo system("mkdir build/release")
-  exec 'cd' finddir("build/debug", ';')
+  exec 'cd' finddir("build", ';')
+  silent echo system("mkdir debug")
+  silent echo system("mkdir release")
+  exec 'cd' finddir("debug", ';')
   silent exec "!cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=Debug ../.."
-  exec 'cd' finddir("build/release", ';')
+  exec 'cd' finddir("release", ';')
   exec "!cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=Release ../.."
   exec 'cd' expand("%:p:h")
 endfunction
