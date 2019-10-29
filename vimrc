@@ -145,11 +145,12 @@ endfunction
 
 " Function for CMake clean.
 function! CMakeClean()
-  let bin_dir = finddir("bin", ';')
-  let build_dir = finddir("build", ';')
-  silent echo system("rm -rf " . bin_dir . "/shaco")
-  silent echo system("rm -rf " . build_dir . "/*")
+  exec 'cd' finddir("build", ';')
+  silent echo system("rm -rf ../bin/shaco")
+  silent echo system("rm -rf ./debug")
+  silent echo system("rm -rf ./release")
   echom "distclean complete"
+  exec 'cd' expand("%:p:h")
 endfunction
 
 " Mapping for CMake processes
