@@ -124,61 +124,37 @@ set nofoldenable
 "nmap <S-f6> :make distclean<CR>
 
 " Function for CMake configure.
-function! CMakeConfigure(type)
-  call CMakeDistClean()
+function! CMakeConfigure()
   exec 'cd' finddir("build", ';')
-  if has('win32')
-    exec "!cmake -G \"NMake Makefiles\" -D CMAKE_C_COMPILER=icl -D CMAKE_CXX_COMPILER=icl -D CMAKE_BUILD_TYPE=" . a:type . " .."
-  else
-    exec "!cmake -G \"Unix Makefiles\" -D CMAKE_C_COMPILER=icc -D CMAKE_CXX_COMPILER=icpc -D CMAKE_BUILD_TYPE=" . a:type . " .."
-  endif
+  silent echo system("mkdir debug")
+  silent echo system("mkdir release")
+  exec 'cd' finddir("debug", ';')
+  silent exec "!cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=Debug ../.."
+  exec 'cd' finddir("release", ';')
+  exec "!cmake -G \"Unix Makefiles\" -D CMAKE_BUILD_TYPE=Release ../.."
   exec 'cd' expand("%:p:h")
 endfunction
 
 " Function for CMake build.
-function! CMakeBuild()
-  exec 'cd' finddir("build", ';')
-  if has('win32')
-    compiler msvc
-    make
-  else
-    make -j2
-  endif
+function! CMakeBuild(type)
+  exec 'cd' finddir("build/" . a:type, ';')
+  make -j2
   exec 'cd' expand("%:p:h")
 endfunction
 
 " Function for CMake clean.
-function! CMakeClean()
-  exec 'cd' finddir("build", ';')
-  if has('win32')
-    compiler msvc
-    make clean
-  else
-    make clean
-  endif
+function! CMakeClean(type)
+  exec 'cd' finddir("build/" . a:type, ';')
+  make clean
   exec 'cd' expand("%:p:h")
 endfunction
 
-" Function for CMake distclean.
-function! CMakeDistClean()
-  let bin_dir = finddir("bin", ';')
-  let build_dir = finddir("build", ';')
-  if has('win32')
-    silent echo system("powershell -command \"remove-item " . bin_dir . "\\shaco.* -recurse -force\"")
-    silent echo system("powershell -command \"remove-item " . build_dir . "\\* -exclude .gitignore -recurse -force\"")
-  else
-    silent echo system("rm -rf " . bin_dir . "/shaco")
-    silent echo system("rm -rf " . build_dir . "/*")
-  endif
-  echom "distclean complete"
-endfunction
-
 " Mapping for CMake processes
-nmap <f5> :call CMakeBuild()<CR>
-nmap <f6> :call CMakeClean()<CR>
-nmap <f7> :call CMakeConfigure("Debug")<CR>
-nmap <f8> :call CMakeConfigure("Release")<CR>
-nmap <f9> :call CMakeDistClean()<CR>
+nmap <f5> :call CMakeBuild("debug")<CR>
+nmap <f6> :call CMakeBuild("release")<CR>
+nmap <S-f5> :call CMakeClean("debug")<CR>
+nmap <S-f6> :call CMakeClean("release")<CR>
+nmap <f8> :call CMakeConfigure()<CR>
 
 " Mapping for debugging
 nmap <f4> :cn<CR>
@@ -191,8 +167,3 @@ nmap <f2> :redraw!<CR>
 nnoremap <Tab> :bnext<CR>
 nnoremap <S-Tab> :bprevious<CR>
 nnoremap <C-X> :bdelete<CR>
-
-" Font for gvim
-if has("gui_running")
-  set guifont=D2Coding:h12
-endif
