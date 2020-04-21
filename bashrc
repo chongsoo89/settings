@@ -10,7 +10,7 @@ alias tarc='tar cvvzf'
 alias tarx='tar xvvzf'
 
 # Bigstorage directory
-export bigstorage=/scratch/$USER
+export BIGSTORAGE=/scratch/$USER
 
 # KISTI system
 export SYSTEM=x86-skylake
