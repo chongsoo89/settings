@@ -138,7 +138,7 @@ endfunction
 " Function for CMake build.
 function! CMakeBuild(type)
   exec 'cd' finddir("build/" . a:type, ';')
-  make -j2
+  make -j3
   exec 'cd' expand("%:p:h")
 endfunction
 
