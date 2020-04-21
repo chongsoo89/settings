@@ -28,18 +28,20 @@ module load git/1.8.3.4
 export CGNS_VERSION=3.4.0
 export PARMETIS_VERSION=4.0.3
 
+export LIB_LOCATION=/home01/$USER/opt/$SYSTEM
+
 # CGNS for cmake
-export PATH=/home01/$USER/opt/$SYSTEM/cgns/$CGNS_VERSION/bin:$PATH
-export INCLUDE=/home01/$USER/opt/$SYSTEM/cgns/$CGNS_VERSION/include:$INCLUDE
-export LIB=/home01/$USER/opt/$SYSTEM/cgns/$CGNS_VERSION/lib:$LIB
+export PATH=$LIB_LOCATION/cgns/$CGNS_VERSION/bin:$PATH
+export INCLUDE=$LIB_LOCATION/cgns/$CGNS_VERSION/include:$INCLUDE
+export LIB=$LIB_LOCATION/cgns/$CGNS_VERSION/lib:$LIB
 
 # ParMETIS for cmake
-export PATH=/home01/$USER/opt/$SYSTEM/parmetis/$PARMETIS_VERSION/bin:$PATH
-export INCLUDE=/home01/$USER/opt/$SYSTEM/parmetis/$PARMETIS_VERSION/include:$INCLUDE
-export LIB=/home01/$USER/opt/$SYSTEM/parmetis/$PARMETIS_VERSION/lib:$LIB
+export PATH=$LIB_LOCATION/parmetis/$PARMETIS_VERSION/bin:$PATH
+export INCLUDE=$LIB_LOCATION/parmetis/$PARMETIS_VERSION/include:$INCLUDE
+export LIB=$LIB_LOCATION/parmetis/$PARMETIS_VERSION/lib:$LIB
 
 # RapidJson for cmake
-export INCLUDE=/opt/lib_$COMPILER/rapidjson/include:$INCLUDE
+export INCLUDE=$LIB_LOCATION/rapidjson/include:$INCLUDE
 
 # Linux standard environment variables
 export CPATH=$INCLUDE:$CPATH
