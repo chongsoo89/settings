@@ -38,6 +38,9 @@ export PATH=/home01/$USER/opt/$SYSTEM/parmetis/$PARMETIS_VERSION/bin:$PATH
 export INCLUDE=/home01/$USER/opt/$SYSTEM/parmetis/$PARMETIS_VERSION/include:$INCLUDE
 export LIB=/home01/$USER/opt/$SYSTEM/parmetis/$PARMETIS_VERSION/lib:$LIB
 
+# RapidJson for cmake
+export INCLUDE=/opt/lib_$COMPILER/rapidjson/include:$INCLUDE
+
 # Linux standard environment variables
 export CPATH=$INCLUDE:$CPATH
 export LIBRARY_PATH=$LIB:$LIBRARY_PATH
