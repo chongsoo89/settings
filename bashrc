@@ -33,7 +33,7 @@ fi
 
 # Library version
 #export HDF5_VERSION=1.10.5
-export CGNS_VERSION=4.1.1
+export CGNS_VERSION=3.4.0
 export PARMETIS_VERSION=4.0.3
 
 export LIB_LOCATION=/opt/lib_$COMPILER
@@ -45,7 +45,6 @@ export LIB_LOCATION=/opt/lib_$COMPILER
 #export LIB=$LIB_LOCATION/hdf5/$HDF5_VERSION/lib:$LIB
 
 # CGNS for cmake
-export PATH=$LIB_LOCATION/cgns/$CGNS_VERSION/share/cgnstools:$PATH
 export PATH=$LIB_LOCATION/cgns/$CGNS_VERSION/bin:$PATH
 export INCLUDE=$LIB_LOCATION/cgns/$CGNS_VERSION/include:$INCLUDE
 export LIB=$LIB_LOCATION/cgns/$CGNS_VERSION/lib:$LIB
